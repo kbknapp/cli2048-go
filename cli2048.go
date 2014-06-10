@@ -7,7 +7,7 @@ import (
 	"os/exec"
 )
 
-const Version = "0.3"
+const Version = "0.4"
 
 func main() {
 	game := gmboard.NewGameBoard()
