@@ -10,14 +10,16 @@ import (
 const Version = "0.1"
 
 func main() {
-
+	fmt.Println("Making Game board...")
 	game := gmboard.NewGameBoard()
 
+	fmt.Println("Making cells...")
 	game.NewCell()
 	game.NewCell()
 
 	var ans []byte = make([]byte, 1)
 
+	fmt.Println("Setting ttys...")
 	// disable input buffering
 	exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
 	// do not disp enter chars on screen
@@ -55,7 +57,7 @@ func main() {
 	}
 }
 
-func updateDisplay(gb *gmboard.GameBoard) {
+func updateDisplay(gb gmboard.GameBoard) {
 	clearTerminal()
 	printSep(gb.Size)
 

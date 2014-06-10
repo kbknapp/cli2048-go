@@ -2,6 +2,7 @@ package gmboard
 
 import (
 	"errors"
+	"fmt"
 	"github.com/kbknapp/go/matrix"
 	"math/rand"
 	"time"
@@ -13,11 +14,14 @@ type GameBoard struct {
 	matrix.Matrix
 }
 
-func NewGameBoard() *GameBoard {
+func NewGameBoard() GameBoard {
 
-	gb := GameBoard{*matrix.NewMatrix(4)}
-
-	return &gb
+	gb := GameBoard{matrix.NewMatrix(GameSize)}
+	for i := 0; i < len(gb.M); i++ {
+		gb.M[i] = 0
+	}
+	fmt.Printf("%v\n", gb)
+	return gb
 }
 
 func (gb *GameBoard) NewCell() {
@@ -36,7 +40,7 @@ func (gb *GameBoard) NewCell() {
 			break
 		}
 	}
-	//fmt.Printf("i=%d\nnum=%d\n", i, num)
+	fmt.Printf("i=%d\nnum=%d\n", i, num)
 	gb.M[i] = num
 }
 
