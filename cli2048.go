@@ -7,19 +7,19 @@ import (
 	"os/exec"
 )
 
-const Version = "0.1"
+const Version = "0.2"
 
 func main() {
-	fmt.Println("Making Game board...")
+	//fmt.Println("Making Game board...")
 	game := gmboard.NewGameBoard()
 
-	fmt.Println("Making cells...")
+	//fmt.Println("Making cells...")
 	game.NewCell()
 	game.NewCell()
 
 	var ans []byte = make([]byte, 1)
 
-	fmt.Println("Setting ttys...")
+	//fmt.Println("Setting ttys...")
 	// disable input buffering
 	exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
 	// do not disp enter chars on screen
@@ -29,7 +29,7 @@ func main() {
 
 		updateDisplay(game)
 
-		fmt.Print("Move: ")
+		//fmt.Print("Move: ")
 		os.Stdin.Read(ans)
 
 		switch string(ans) {
@@ -63,10 +63,10 @@ func updateDisplay(gb gmboard.GameBoard) {
 
 	for i := 0; i < len(gb.M); i++ {
 		if (i+1)%gb.Size == 0 {
-			fmt.Printf("|%s|\n", getCellString(gb.M[i].(int)))
+			fmt.Printf("|%s|\n", getCellString(gb.M[i]))
 			printSep(gb.Size)
 		} else {
-			fmt.Printf("|%s", getCellString(gb.M[i].(int)))
+			fmt.Printf("|%s", getCellString(gb.M[i]))
 		}
 	}
 }

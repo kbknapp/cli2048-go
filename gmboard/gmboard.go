@@ -12,11 +12,12 @@ const GameSize = 4
 
 type GameBoard struct {
 	matrix.Matrix
+	M []int
 }
 
 func NewGameBoard() GameBoard {
 
-	gb := GameBoard{matrix.NewMatrix(GameSize)}
+	gb := GameBoard{matrix.NewMatrix(GameSize), make([]int, GameSize*GameSize)}
 	for i := 0; i < len(gb.M); i++ {
 		gb.M[i] = 0
 	}
@@ -47,7 +48,7 @@ func (gb *GameBoard) NewCell() {
 func (gb *GameBoard) ShiftUp() error {
 	done := false
 	moves := 0
-	var offLimits [GameSize * GameSize]int
+	offLimits := make([]bool, len(gb.M))
 	for {
 		for i, row := range gb.Rows {
 			for j, cell := range row {
@@ -55,7 +56,7 @@ func (gb *GameBoard) ShiftUp() error {
 					continue
 				}
 
-				currNum := gb.M[cell].(int)
+				currNum := gb.M[cell]
 
 				if currNum == 0 {
 					continue
@@ -79,9 +80,9 @@ func (gb *GameBoard) ShiftUp() error {
 					done = false
 					moves++
 				} else if currNum == gb.M[newIndex] {
-					if offLimits[cell] != 1 {
+					if !offLimits[cell] {
 						gb.M[newIndex] = currNum * 2
-						offLimits[newIndex] = 1
+						offLimits[newIndex] = true
 						gb.M[cell] = 0
 						done = false
 						moves++
@@ -112,7 +113,7 @@ func (gb *GameBoard) ShiftUp() error {
 func (gb *GameBoard) ShiftDown() error {
 	done := false
 	moves := 0
-	var offLimits [GameSize * GameSize]int
+	offLimits := make([]bool, len(gb.M))
 	for {
 		for i := gb.Size - 1; i >= 0; i-- {
 			for j := gb.Size - 1; j >= 0; j-- {
@@ -120,7 +121,7 @@ func (gb *GameBoard) ShiftDown() error {
 					continue
 				}
 
-				currNum := gb.M[gb.Rows[i][j]].(int)
+				currNum := gb.M[gb.Rows[i][j]]
 
 				if currNum == 0 {
 					continue
@@ -144,9 +145,9 @@ func (gb *GameBoard) ShiftDown() error {
 					done = false
 					moves++
 				} else if currNum == gb.M[newIndex] {
-					if offLimits[gb.Rows[i][j]] != 1 {
+					if !offLimits[gb.Rows[i][j]] {
 						gb.M[newIndex] = currNum * 2
-						offLimits[newIndex] = 1
+						offLimits[newIndex] = true
 						gb.M[gb.Rows[i][j]] = 0
 						done = false
 						moves++
@@ -177,7 +178,7 @@ func (gb *GameBoard) ShiftDown() error {
 func (gb *GameBoard) ShiftLeft() error {
 	done := false
 	moves := 0
-	var offLimits [16]int
+	offLimits := make([]bool, len(gb.M))
 	for {
 		for i, col := range gb.Cols {
 			for j, cell := range col {
@@ -185,7 +186,7 @@ func (gb *GameBoard) ShiftLeft() error {
 					continue
 				}
 
-				currNum := gb.M[cell].(int)
+				currNum := gb.M[cell]
 
 				if currNum == 0 {
 					continue
@@ -209,9 +210,9 @@ func (gb *GameBoard) ShiftLeft() error {
 					done = false
 					moves++
 				} else if currNum == gb.M[newIndex] {
-					if offLimits[cell] != 1 {
+					if !offLimits[cell] {
 						gb.M[newIndex] = currNum * 2
-						offLimits[newIndex] = 1
+						offLimits[newIndex] = true
 						gb.M[cell] = 0
 						done = false
 						moves++
@@ -242,7 +243,7 @@ func (gb *GameBoard) ShiftLeft() error {
 func (gb *GameBoard) ShiftRight() error {
 	done := false
 	moves := 0
-	var offLimits [GameSize * GameSize]int
+	offLimits := make([]bool, len(gb.M))
 	for {
 		for i := gb.Size - 1; i >= 0; i-- {
 			for j := gb.Size - 1; j >= 0; j-- {
@@ -250,7 +251,7 @@ func (gb *GameBoard) ShiftRight() error {
 					continue
 				}
 
-				currNum := gb.M[gb.Cols[i][j]].(int)
+				currNum := gb.M[gb.Cols[i][j]]
 
 				if currNum == 0 {
 					continue
@@ -274,9 +275,9 @@ func (gb *GameBoard) ShiftRight() error {
 					done = false
 					moves++
 				} else if currNum == gb.M[newIndex] {
-					if offLimits[gb.Cols[i][j]] != 1 {
+					if !offLimits[gb.Cols[i][j]] {
 						gb.M[newIndex] = currNum * 2
-						offLimits[newIndex] = 1
+						offLimits[newIndex] = true
 						gb.M[gb.Cols[i][j]] = 0
 						done = false
 						moves++
