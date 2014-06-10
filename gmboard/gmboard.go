@@ -25,7 +25,17 @@ func NewGameBoard() GameBoard {
 	return gb
 }
 
-func (gb *GameBoard) NewCell() {
+func (gb *GameBoard) NewCell() error {
+	full := true
+	for i := 0; i < len(gb.M); i++ {
+		if gb.M[i] == 0 {
+			full = false
+			break
+		}
+	}
+	if full {
+		return gb.movesLeft()
+	}
 	i := 0
 	rand.Seed(time.Now().Unix())
 	for {
@@ -50,9 +60,11 @@ func (gb *GameBoard) NewCell() {
 	}
 
 	gb.M[i] = num
+
+	return nil
 }
 
-func shiftIndices(gb *GameBoard, indices [][]int) error {
+func (gb *GameBoard) shiftIndices(indices [][]int) error {
 	done := false
 	moves := 0
 	offLimits := make([]bool, len(gb.M))
@@ -117,7 +129,7 @@ func shiftIndices(gb *GameBoard, indices [][]int) error {
 	return errors.New("No moves")
 }
 
-func shiftIndicesRev(gb *GameBoard, indices [][]int) error {
+func (gb *GameBoard) shiftIndicesRev(indices [][]int) error {
 	done := false
 	moves := 0
 	offLimits := make([]bool, len(gb.M))
@@ -183,16 +195,53 @@ func shiftIndicesRev(gb *GameBoard, indices [][]int) error {
 }
 
 func (gb *GameBoard) ShiftUp() error {
-	return shiftIndices(gb, gb.Rows)
+	return gb.shiftIndices(gb.Rows)
 }
 func (gb *GameBoard) ShiftDown() error {
-	return shiftIndicesRev(gb, gb.Rows)
+	return gb.shiftIndicesRev(gb.Rows)
 }
 
 func (gb *GameBoard) ShiftLeft() error {
-	return shiftIndices(gb, gb.Cols)
+	return gb.shiftIndices(gb.Cols)
 }
 
 func (gb *GameBoard) ShiftRight() error {
-	return shiftIndicesRev(gb, gb.Cols)
+	return gb.shiftIndicesRev(gb.Cols)
+}
+
+func (gb *GameBoard) movesLeft() error {
+	a := 0
+	b := gb.M[1]
+	for i := 0; i < len(gb.M)-1; i++ {
+		if (i+1)%gb.Size == 0 {
+			b = gb.M[i+2]
+			continue
+		}
+		a = gb.M[i]
+		if a == b {
+			return nil
+		}
+		if i >= len(gb.M)-2 {
+			break
+		}
+		b = gb.M[i+2]
+	}
+	a = 0
+	b = gb.M[gb.Size]
+	for i, col := range gb.Cols {
+		for j, cell := range col {
+			a = gb.M[cell]
+			if a == b {
+				return nil
+			}
+			if j >= 2 {
+				if i < gb.Size-1 {
+					b = gb.M[gb.Cols[i+1][1]]
+				}
+				break
+			}
+			b = gb.M[col[j+2]]
+		}
+	}
+	return errors.New("Game over")
 }

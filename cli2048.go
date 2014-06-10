@@ -10,51 +10,49 @@ import (
 const Version = "0.3"
 
 func main() {
-	//fmt.Println("Making Game board...")
 	game := gmboard.NewGameBoard()
 
-	//fmt.Println("Making cells...")
 	game.NewCell()
 	game.NewCell()
 
 	var ans []byte = make([]byte, 1)
 
-	//fmt.Println("Setting ttys...")
 	// disable input buffering
 	exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
 	// do not disp enter chars on screen
 	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
 
+	// Return console to normal upon exit
+	defer exec.Command("stty", "-F", "/dev/tty", "-cbreak").Run()
+	defer exec.Command("stty", "-F", "/dev/tty", "echo").Run()
+
 	for {
 
 		updateDisplay(game)
 
-		//fmt.Printf("cols=%v\nrows=%v\n\n", game.Cols, game.Rows)
-
 		os.Stdin.Read(ans)
-
+		var err error
 		switch string(ans) {
 		case "l":
-			if err := game.ShiftRight(); err != nil {
-				continue
-			}
+			err = game.ShiftRight()
 		case "k":
-			if err := game.ShiftDown(); err != nil {
-				continue
-			}
+			err = game.ShiftDown()
 		case "j":
-			if err := game.ShiftLeft(); err != nil {
-				continue
-			}
+			err = game.ShiftLeft()
 		case "i":
-			if err := game.ShiftUp(); err != nil {
-				continue
-			}
+			err = game.ShiftUp()
 		case "q":
 			return
 		}
 
-		game.NewCell()
+		if err != nil {
+			if err = game.NewCell(); err != nil {
+				fmt.Printf("\n\n%s!\n\n", err.Error())
+				return
+			}
+		} else {
+			game.NewCell()
+		}
 	}
 }
 
