@@ -12,13 +12,8 @@ import (
 const Version = "0.1"
 const size = 4
 
-//type SquareRows [4][4]int
-//type SquareCols [4][4]int
-
 var square [16]int
 
-//var cols SquareCols
-//var rows SquareRows
 var rows [][]int = [][]int{
 	[]int{0, 1, 2, 3},
 	[]int{4, 5, 6, 7},
@@ -45,9 +40,6 @@ func main() {
 
 		updateDisplay()
 
-		//runes := []int(ans)
-		//str := string(runes)
-		//fmt.Printf("%sInput\n", ans)
 		fmt.Print("Move: ")
 		fmt.Scanf("%v", &ans)
 
