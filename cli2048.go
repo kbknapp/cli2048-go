@@ -29,7 +29,7 @@ func main() {
 
 		updateDisplay(game)
 
-		fmt.Printf("cols=%v\nrows=%v\n\n", game.Cols, game.Rows)
+		//fmt.Printf("cols=%v\nrows=%v\n\n", game.Cols, game.Rows)
 
 		os.Stdin.Read(ans)
 

@@ -38,10 +38,17 @@ func (gb *GameBoard) NewCell() {
 	for {
 		num = rand.Intn(5)
 		if num%2 == 0 && num != 0 {
-			break
+			if num == 4 {
+				w := rand.Intn(4)
+				if (w % 2) != 0 {
+					break
+				}
+			} else {
+				break
+			}
 		}
 	}
-	fmt.Printf("i=%d\nnum=%d\n", i, num)
+	//fmt.Printf("i=%d\nnum=%d\n", i, num)
 	gb.M[i] = num
 }
 
