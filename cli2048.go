@@ -55,7 +55,9 @@ func main() {
 		case "l":
 			moveRight()
 		case "k":
-			moveDown()
+			if err := moveDown(); err != nil {
+				continue
+			}
 		case "j":
 			moveLeft()
 		case "i":
@@ -195,8 +197,64 @@ func moveUp() error {
 	return errors.New("No moves")
 }
 
-func moveDown() {
+func moveDown() error {
+	done := false
+	moves := 0
+	for {
+		for i := size - 1; i >= 0; i-- {
+			for j := size - 1; j >= 0; j-- {
+				if i == size-1 {
+					continue
+				}
 
+				currNum := square[rows[i][j]]
+
+				if currNum == 0 {
+					continue
+				}
+				new_index := -1
+				posIndex := -1
+				for ni := i + 1; ni <= size-1; ni++ {
+					new_index = rows[ni][j]
+					if square[new_index] == 0 {
+						posIndex = new_index
+						continue
+					} else {
+						break
+					}
+				}
+				fmt.Printf("i %d, j %d, cN %d, n_i %d, pI %d, c %d\n", i, j, currNum, new_index, posIndex, square[rows[i][j]])
+				fmt.Printf("%v\n", square)
+				if square[new_index] == 0 {
+					square[new_index] = currNum
+					square[rows[i][j]] = 0
+					done = false
+					moves++
+				} else if currNum == square[new_index] {
+					square[new_index] = currNum * 2
+					square[rows[i][j]] = 0
+					done = false
+					moves++
+				} else {
+					if posIndex == -1 {
+						continue
+					}
+					square[posIndex] = currNum
+					square[rows[i][j]] = 0
+					done = false
+					moves++
+				}
+			}
+		}
+		if done {
+			break
+		}
+		done = true
+	}
+	if moves > 0 {
+		return nil
+	}
+	return errors.New("No moves")
 }
 
 func moveLeft() {
