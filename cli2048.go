@@ -142,6 +142,7 @@ func getCellString(v int) string {
 func moveUp() error {
 	done := false
 	moves := 0
+	var offLimits [16]int
 	for {
 		for i, row := range rows {
 			for j, cell := range row {
@@ -173,10 +174,14 @@ func moveUp() error {
 					done = false
 					moves++
 				} else if currNum == square[new_index] {
-					square[new_index] = currNum * 2
-					square[cell] = 0
-					done = false
-					moves++
+					if offLimits[cell] != 1 {
+						square[new_index] = currNum * 2
+						offLimits[new_index] = 1
+						square[cell] = 0
+						done = false
+						moves++
+					}
+
 				} else {
 					if posIndex == -1 {
 						continue
@@ -202,6 +207,7 @@ func moveUp() error {
 func moveDown() error {
 	done := false
 	moves := 0
+	var offLimits [16]int
 	for {
 		for i := size - 1; i >= 0; i-- {
 			for j := size - 1; j >= 0; j-- {
@@ -233,10 +239,14 @@ func moveDown() error {
 					done = false
 					moves++
 				} else if currNum == square[new_index] {
-					square[new_index] = currNum * 2
-					square[rows[i][j]] = 0
-					done = false
-					moves++
+					if offLimits[rows[i][j]] != 1 {
+						square[new_index] = currNum * 2
+						offLimits[new_index] = 1
+						square[rows[i][j]] = 0
+						done = false
+						moves++
+					}
+
 				} else {
 					if posIndex == -1 {
 						continue
@@ -262,6 +272,7 @@ func moveDown() error {
 func moveLeft() error {
 	done := false
 	moves := 0
+	var offLimits [16]int
 	for {
 		for i, col := range cols {
 			for j, cell := range col {
@@ -293,10 +304,14 @@ func moveLeft() error {
 					done = false
 					moves++
 				} else if currNum == square[new_index] {
-					square[new_index] = currNum * 2
-					square[cell] = 0
-					done = false
-					moves++
+					if offLimits[cell] != 1 {
+						square[new_index] = currNum * 2
+						offLimits[new_index] = 1
+						square[cell] = 0
+						done = false
+						moves++
+					}
+
 				} else {
 					if posIndex == -1 {
 						continue
@@ -322,6 +337,7 @@ func moveLeft() error {
 func moveRight() error {
 	done := false
 	moves := 0
+	var offLimits [16]int
 	for {
 		for i := size - 1; i >= 0; i-- {
 			for j := size - 1; j >= 0; j-- {
@@ -353,10 +369,14 @@ func moveRight() error {
 					done = false
 					moves++
 				} else if currNum == square[new_index] {
-					square[new_index] = currNum * 2
-					square[cols[i][j]] = 0
-					done = false
-					moves++
+					if offLimits[cols[i][j]] != 1 {
+						square[new_index] = currNum * 2
+						offLimits[new_index] = 1
+						square[cols[i][j]] = 0
+						done = false
+						moves++
+					}
+
 				} else {
 					if posIndex == -1 {
 						continue
