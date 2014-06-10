@@ -48,17 +48,17 @@ func (gb *GameBoard) NewCell() {
 			}
 		}
 	}
-	//fmt.Printf("i=%d\nnum=%d\n", i, num)
+
 	gb.M[i] = num
 }
 
-func (gb *GameBoard) ShiftUp() error {
+func shiftIndices(gb *GameBoard, indices [][]int) error {
 	done := false
 	moves := 0
 	offLimits := make([]bool, len(gb.M))
 	for {
-		for i, row := range gb.Rows {
-			for j, cell := range row {
+		for i, seq := range indices {
+			for j, cell := range seq {
 				if i == 0 {
 					continue
 				}
@@ -68,10 +68,11 @@ func (gb *GameBoard) ShiftUp() error {
 				if currNum == 0 {
 					continue
 				}
+
 				newIndex := -1
 				posIndex := -1
 				for ni := i - 1; ni >= 0; ni-- {
-					newIndex = gb.Rows[ni][j]
+					newIndex = indices[ni][j]
 					if gb.M[newIndex] == 0 {
 						posIndex = newIndex
 						continue
@@ -79,8 +80,7 @@ func (gb *GameBoard) ShiftUp() error {
 						break
 					}
 				}
-				//fmt.Printf("i %d, j %d, cN %d, n_i %d, pI %d, c %d\n", i, j, currNum, newIndex, posIndex, cell)
-				//fmt.Printf("%v\n", gb.M)
+
 				if gb.M[newIndex] == 0 {
 					gb.M[newIndex] = currNum
 					gb.M[cell] = 0
@@ -117,7 +117,7 @@ func (gb *GameBoard) ShiftUp() error {
 	return errors.New("No moves")
 }
 
-func (gb *GameBoard) ShiftDown() error {
+func shiftIndicesRev(gb *GameBoard, indices [][]int) error {
 	done := false
 	moves := 0
 	offLimits := make([]bool, len(gb.M))
@@ -128,15 +128,16 @@ func (gb *GameBoard) ShiftDown() error {
 					continue
 				}
 
-				currNum := gb.M[gb.Rows[i][j]]
+				currNum := gb.M[indices[i][j]]
 
 				if currNum == 0 {
 					continue
 				}
+
 				newIndex := -1
 				posIndex := -1
 				for ni := i + 1; ni <= gb.Size-1; ni++ {
-					newIndex = gb.Rows[ni][j]
+					newIndex = indices[ni][j]
 					if gb.M[newIndex] == 0 {
 						posIndex = newIndex
 						continue
@@ -144,18 +145,17 @@ func (gb *GameBoard) ShiftDown() error {
 						break
 					}
 				}
-				//fmt.Printf("i %d, j %d, cN %d, n_i %d, pI %d, c %d\n", i, j, currNum, newIndex, posIndex, gb.M[rows[i][j]])
-				//fmt.Printf("%v\n", gb.M)
+
 				if gb.M[newIndex] == 0 {
 					gb.M[newIndex] = currNum
-					gb.M[gb.Rows[i][j]] = 0
+					gb.M[indices[i][j]] = 0
 					done = false
 					moves++
 				} else if currNum == gb.M[newIndex] {
-					if !offLimits[gb.Rows[i][j]] {
+					if !offLimits[indices[i][j]] {
 						gb.M[newIndex] = currNum * 2
 						offLimits[newIndex] = true
-						gb.M[gb.Rows[i][j]] = 0
+						gb.M[indices[i][j]] = 0
 						done = false
 						moves++
 					}
@@ -165,7 +165,7 @@ func (gb *GameBoard) ShiftDown() error {
 						continue
 					}
 					gb.M[posIndex] = currNum
-					gb.M[gb.Rows[i][j]] = 0
+					gb.M[indices[i][j]] = 0
 					done = false
 					moves++
 				}
@@ -180,134 +180,19 @@ func (gb *GameBoard) ShiftDown() error {
 		return nil
 	}
 	return errors.New("No moves")
+}
+
+func (gb *GameBoard) ShiftUp() error {
+	return shiftIndices(gb, gb.Rows)
+}
+func (gb *GameBoard) ShiftDown() error {
+	return shiftIndicesRev(gb, gb.Rows)
 }
 
 func (gb *GameBoard) ShiftLeft() error {
-	done := false
-	moves := 0
-	offLimits := make([]bool, len(gb.M))
-	for {
-		for i, col := range gb.Cols {
-			for j, cell := range col {
-				if i == 0 {
-					continue
-				}
-
-				currNum := gb.M[cell]
-
-				if currNum == 0 {
-					continue
-				}
-				newIndex := -1
-				posIndex := -1
-				for ni := i - 1; ni >= 0; ni-- {
-					newIndex = gb.Cols[ni][j]
-					if gb.M[newIndex] == 0 {
-						posIndex = newIndex
-						continue
-					} else {
-						break
-					}
-				}
-				//fmt.Printf("i %d, j %d, cN %d, n_i %d, pI %d, c %d\n", i, j, currNum, newIndex, posIndex, cell)
-				//fmt.Printf("%v\n", gb.M)
-				if gb.M[newIndex] == 0 {
-					gb.M[newIndex] = currNum
-					gb.M[cell] = 0
-					done = false
-					moves++
-				} else if currNum == gb.M[newIndex] {
-					if !offLimits[cell] {
-						gb.M[newIndex] = currNum * 2
-						offLimits[newIndex] = true
-						gb.M[cell] = 0
-						done = false
-						moves++
-					}
-
-				} else {
-					if posIndex == -1 {
-						continue
-					}
-					gb.M[posIndex] = currNum
-					gb.M[cell] = 0
-					done = false
-					moves++
-				}
-			}
-		}
-		if done {
-			break
-		}
-		done = true
-	}
-	if moves > 0 {
-		return nil
-	}
-	return errors.New("No moves")
+	return shiftIndices(gb, gb.Cols)
 }
 
 func (gb *GameBoard) ShiftRight() error {
-	done := false
-	moves := 0
-	offLimits := make([]bool, len(gb.M))
-	for {
-		for i := gb.Size - 1; i >= 0; i-- {
-			for j := gb.Size - 1; j >= 0; j-- {
-				if i == gb.Size-1 {
-					continue
-				}
-
-				currNum := gb.M[gb.Cols[i][j]]
-
-				if currNum == 0 {
-					continue
-				}
-				newIndex := -1
-				posIndex := -1
-				for ni := i + 1; ni <= gb.Size-1; ni++ {
-					newIndex = gb.Cols[ni][j]
-					if gb.M[newIndex] == 0 {
-						posIndex = newIndex
-						continue
-					} else {
-						break
-					}
-				}
-				//fmt.Printf("i %d, j %d, cN %d, n_i %d, pI %d, c %d\n", i, j, currNum, newIndex, posIndex, gb.M[rows[i][j]])
-				//fmt.Printf("%v\n", gb.M)
-				if gb.M[newIndex] == 0 {
-					gb.M[newIndex] = currNum
-					gb.M[gb.Cols[i][j]] = 0
-					done = false
-					moves++
-				} else if currNum == gb.M[newIndex] {
-					if !offLimits[gb.Cols[i][j]] {
-						gb.M[newIndex] = currNum * 2
-						offLimits[newIndex] = true
-						gb.M[gb.Cols[i][j]] = 0
-						done = false
-						moves++
-					}
-
-				} else {
-					if posIndex == -1 {
-						continue
-					}
-					gb.M[posIndex] = currNum
-					gb.M[gb.Cols[i][j]] = 0
-					done = false
-					moves++
-				}
-			}
-		}
-		if done {
-			break
-		}
-		done = true
-	}
-	if moves > 0 {
-		return nil
-	}
-	return errors.New("No moves")
+	return shiftIndicesRev(gb, gb.Cols)
 }

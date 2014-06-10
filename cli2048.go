@@ -7,7 +7,7 @@ import (
 	"os/exec"
 )
 
-const Version = "0.2"
+const Version = "0.3"
 
 func main() {
 	//fmt.Println("Making Game board...")
@@ -51,7 +51,7 @@ func main() {
 				continue
 			}
 		case "q":
-			break
+			return
 		}
 
 		game.NewCell()
