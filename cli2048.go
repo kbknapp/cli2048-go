@@ -35,15 +35,21 @@ func main() {
 	newCell()
 	newCell()
 
-	ans := ""
+	var ans []byte = make([]byte, 1)
+
+	// disable input buffering
+	exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
+	// do not disp enter chars on screen
+	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
+
 	for {
 
 		updateDisplay()
 
 		fmt.Print("Move: ")
-		fmt.Scanf("%v", &ans)
+		os.Stdin.Read(ans)
 
-		switch ans {
+		switch string(ans) {
 		case "l":
 			if err := moveRight(); err != nil {
 				continue
