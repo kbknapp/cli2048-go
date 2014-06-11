@@ -27,7 +27,7 @@ func NewGameBoard(size int) GameBoard {
 
 func (gb *GameBoard) Reset() {
 	for i, _ := range gb.M {
-		gb.M = 0
+		gb.M[i] = 0
 	}
 	gb.NewCell()
 	gb.NewCell()
