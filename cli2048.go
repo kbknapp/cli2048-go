@@ -30,12 +30,20 @@ func main() {
 		var err error
 		switch strings.ToLower(string(ans)) {
 		case "l":
+			fallthrough
+		case "d":
 			newPoints, shifted = board.ShiftRight()
 		case "k":
+			fallthrough
+		case "s":
 			newPoints, shifted = board.ShiftDown()
 		case "j":
+			fallthrough
+		case "a":
 			newPoints, shifted = board.ShiftLeft()
 		case "i":
+			fallthrough
+		case "w":
 			newPoints, shifted = board.ShiftUp()
 		case "n":
 			fmt.Printf("Are you sure you want to reset the game?[n]: ")
