@@ -38,16 +38,17 @@ func main() {
 		case "i":
 			newPoints, shifted = board.ShiftUp()
 		case "n":
-			fmt.Printf("Are you sure?[n]: ")
+			fmt.Printf("Are you sure you want to reset the game?[n]: ")
 			os.Stdin.Read(ans)
 			if strings.ToLower(string(ans)) == "y" {
 				board.Reset()
 				player.Score = 0
 			}
 		case "q":
-			fmt.Printf("Are you sure?[n]: ")
+			fmt.Printf("Are you sure you want to quit?[n]: ")
 			os.Stdin.Read(ans)
 			if strings.ToLower(string(ans)) == "y" {
+				fmt.Println("")
 				return
 			}
 		}
