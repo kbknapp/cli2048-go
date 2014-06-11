@@ -2,16 +2,55 @@ package main
 
 import (
 	"./game"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
 )
 
-const Version = "0.5.1"
-const boardSize = 4
-const Os = "Linux"
+const (
+	Version   = "0.5.2"
+	boardSize = 4
+	Os        = "Linux"
+	Usage     = `Usage: cli2048 [flags]
+	-v		Display version
+	--version
+	-h		Display help
+	--help
+
+Controls:
+	UP      w, i, [UP ARROW]
+	DOWN    s, k, [DOWN ARROW]
+	LEFT    a, j, [LEFT ARROW]
+	RIGHT   d, l, [RIGHT ARROW]
+
+	HELP    h
+
+	RESET       r, n
+	NEW GAME    r, n
+
+	QUIT    q, [ESC]`
+)
+
+var vp = flag.Bool("version", false, "Display the version")
+var hp = flag.Bool("help", false, "Display help info")
+
+func init() {
+	flag.BoolVar(vp, "v", false, "Display the version")
+	flag.BoolVar(hp, "h", false, "Display help info")
+}
 
 func main() {
+
+	flag.Parse()
+
+	if *vp {
+		fmt.Printf("\nCLI2048 v%s\n\n", Version)
+		return
+	} else if *hp {
+		fmt.Printf("\nCLI2048 v%s\n\n%s\n\n", Version, Usage)
+		return
+	}
 	board := game.NewGameBoard(boardSize)
 	display := game.NewGameDisplay(Os, boardSize)
 	player := game.Player{}
