@@ -5,8 +5,15 @@ Console version of the popular '2048' game written in Go.
 
 Controls
 --------
-After starting the game tiles can be shifted via:
 
-    i j k l    (i=up, k=down, j=left, l=right)
-  
-    q          (q=quit)
+    UP      w, i, [UP ARROW]
+    DOWN    s, k, [DOWN ARROW]
+    LEFT    a, j, [LEFT ARROW]
+    RIGHT   d, l, [RIGHT ARROW]
+
+    HELP    h
+
+    RESET       r, n
+    NEW GAME    r, n
+
+    QUIT    q, [ESC]
