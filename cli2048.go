@@ -9,7 +9,7 @@ import (
 
 const Version = "0.5.1"
 const boardSize = 4
-const Os = "Linux"
+const Os = "Windows"
 
 func main() {
 	board := game.NewGameBoard(boardSize)
