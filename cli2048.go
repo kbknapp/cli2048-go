@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const Version = "0.4.5"
+const Version = "0.4.6"
 const boardSize = 4
 const Os = "Linux"
 
