@@ -3,6 +3,15 @@ CLI2048
 
 Console version of the popular '2048' game written in Go.
 
+Usage
+-----
+
+    cli2048 [flags]
+        -v          Display version
+        --version
+        -h          Display help info
+        --help
+
 Controls
 --------
 
