@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const Version = "0.4.7"
+const Version = "0.5"
 const boardSize = 4
 const Os = "Linux"
 
@@ -30,22 +30,45 @@ func main() {
 		var err error
 		switch strings.ToLower(string(ans)) {
 		case "l":
+			// RIGHT
+			fallthrough
+		case "c":
+			// [RIGHT ARROW]
 			fallthrough
 		case "d":
-			newPoints, shifted = board.ShiftRight()
+			// Check  ans byte in case left arrow (0x44) was pressed
+			if ans[0] == 68 {
+				newPoints, shifted = board.ShiftLeft()
+			} else {
+				newPoints, shifted = board.ShiftRight()
+			}
 		case "k":
+			// DOWN
+			fallthrough
+		case "b":
+			// [DOWN ARROW]
 			fallthrough
 		case "s":
 			newPoints, shifted = board.ShiftDown()
 		case "j":
+			// LEFT
 			fallthrough
 		case "a":
-			newPoints, shifted = board.ShiftLeft()
+			// Check ans byte in case up arrow (0x41) was pressed
+			if ans[0] == 65 {
+				newPoints, shifted = board.ShiftUp()
+			} else {
+				newPoints, shifted = board.ShiftLeft()
+			}
 		case "i":
+			// UP
 			fallthrough
 		case "w":
 			newPoints, shifted = board.ShiftUp()
 		case "n":
+			// NEW
+			fallthrough
+		case "r":
 			fmt.Printf("Are you sure you want to reset the game?[n]: ")
 			os.Stdin.Read(ans)
 			if strings.ToLower(string(ans)) == "y" {
@@ -59,6 +82,38 @@ func main() {
 				fmt.Println("")
 				return
 			}
+		case "h":
+			fmt.Println("")
+			fmt.Print(`Controls:
+
+UP	w, i, [UP ARROW]
+DOWN	s, k, [DOWN ARROW]
+LEFT	a*, j, [LEFT ARROW]
+RIGHT	d*, l, [RIGHT ARROW]
+
+HELP	h
+
+QUIT	q, [ESC]
+
+RESET		n, r
+NEW GAME	n, r
+			 
+* If experiencing unexpected movements ensure
+  your [CAPS LOCK] is not on)`)
+			fmt.Println("")
+			os.Stdin.Read(ans)
+		default:
+			if ans[0] == 27 {
+				// ESC
+				fmt.Printf("Are you sure you want to quit?[n]: ")
+				os.Stdin.Read(ans)
+				if strings.ToLower(string(ans)) == "y" {
+					fmt.Println("")
+					return
+				}
+			}
+			//fmt.Printf("You typed string: %s\n Byte: %x", string(ans), ans)
+			//os.Stdin.Read(ans)
 		}
 
 		if shifted == 0 {
