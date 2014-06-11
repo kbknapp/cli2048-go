@@ -1,4 +1,4 @@
-package gmdisplay
+package game
 
 import (
 	"fmt"

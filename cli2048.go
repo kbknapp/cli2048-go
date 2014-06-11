@@ -1,21 +1,19 @@
 package main
 
 import (
-	"./gmboard"
-	"./gmdisplay"
-	"./gmplayer"
+	"./game"
 	"fmt"
 	"os"
 )
 
-const Version = "0.4.3"
-const GameSize = 4
+const Version = "0.4.4"
+const boardSize = 4
 const Os = "Linux"
 
 func main() {
-	game := gmboard.NewGameBoard(GameSize)
-	display := gmdisplay.NewGameDisplay(Os, GameSize)
-	player := gmplayer.Player{}
+	board := game.NewGameBoard(boardSize)
+	display := game.NewGameDisplay(Os, boardSize)
+	player := game.Player{}
 
 	var ans []byte = make([]byte, 1)
 
@@ -24,19 +22,19 @@ func main() {
 
 	for {
 
-		display.UpdateDisplay(game.M, player.Score)
+		display.UpdateDisplay(board.M, player.Score)
 		newPoints := 0
 		os.Stdin.Read(ans)
 		var err error
 		switch string(ans) {
 		case "l":
-			newPoints, err = game.ShiftRight()
+			newPoints, err = board.ShiftRight()
 		case "k":
-			newPoints, err = game.ShiftDown()
+			newPoints, err = board.ShiftDown()
 		case "j":
-			newPoints, err = game.ShiftLeft()
+			newPoints, err = board.ShiftLeft()
 		case "i":
-			newPoints, err = game.ShiftUp()
+			newPoints, err = board.ShiftUp()
 		case "q":
 			return
 		}
@@ -44,8 +42,8 @@ func main() {
 		if err != nil {
 			continue
 		} else {
-			if err = game.NewCell(); err != nil {
-				display.UpdateDisplay(game.M, player.Score)
+			if err = board.NewCell(); err != nil {
+				display.UpdateDisplay(board.M, player.Score)
 				fmt.Printf("\n\n%s!\n\n", err.Error())
 				return
 			}

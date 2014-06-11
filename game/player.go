@@ -1,4 +1,4 @@
-package gmplayer
+package game
 
 type Player struct {
 	Score     int

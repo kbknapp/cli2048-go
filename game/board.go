@@ -1,4 +1,4 @@
-package gmboard
+package game
 
 import (
 	"errors"
