@@ -25,6 +25,14 @@ func NewGameBoard(size int) GameBoard {
 	return gb
 }
 
+func (gb *GameBoard) Reset() {
+	for i, _ := range gb.M {
+		gb.M = 0
+	}
+	gb.NewCell()
+	gb.NewCell()
+}
+
 func (gb *GameBoard) NewCell() error {
 	if gb.isFull() {
 		return gb.movesLeft()
@@ -57,7 +65,7 @@ func (gb *GameBoard) NewCell() error {
 	return gb.movesLeft()
 }
 
-func (gb *GameBoard) shiftIndices(indices [][]int) (int, error) {
+func (gb *GameBoard) shiftIndices(indices [][]int) (int, int) {
 	done := false
 	moves := 0
 	p := 0
@@ -118,13 +126,10 @@ func (gb *GameBoard) shiftIndices(indices [][]int) (int, error) {
 		}
 		done = true
 	}
-	if moves > 0 {
-		return p, nil
-	}
-	return 0, errors.New("No moves")
+	return p, moves
 }
 
-func (gb *GameBoard) shiftIndicesRev(indices [][]int) (int, error) {
+func (gb *GameBoard) shiftIndicesRev(indices [][]int) (int, int) {
 	done := false
 	moves := 0
 	p := 0
@@ -185,24 +190,21 @@ func (gb *GameBoard) shiftIndicesRev(indices [][]int) (int, error) {
 		}
 		done = true
 	}
-	if moves > 0 {
-		return p, nil
-	}
-	return 0, errors.New("No moves")
+	return p, moves
 }
 
-func (gb *GameBoard) ShiftUp() (int, error) {
+func (gb *GameBoard) ShiftUp() (int, int) {
 	return gb.shiftIndices(gb.Rows)
 }
-func (gb *GameBoard) ShiftDown() (int, error) {
+func (gb *GameBoard) ShiftDown() (int, int) {
 	return gb.shiftIndicesRev(gb.Rows)
 }
 
-func (gb *GameBoard) ShiftLeft() (int, error) {
+func (gb *GameBoard) ShiftLeft() (int, int) {
 	return gb.shiftIndices(gb.Cols)
 }
 
-func (gb *GameBoard) ShiftRight() (int, error) {
+func (gb *GameBoard) ShiftRight() (int, int) {
 	return gb.shiftIndicesRev(gb.Cols)
 }
 

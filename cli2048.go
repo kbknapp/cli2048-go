@@ -4,9 +4,10 @@ import (
 	"./game"
 	"fmt"
 	"os"
+	"strings"
 )
 
-const Version = "0.4.4"
+const Version = "0.4.5"
 const boardSize = 4
 const Os = "Linux"
 
@@ -24,22 +25,34 @@ func main() {
 
 		display.UpdateDisplay(board.M, player.Score)
 		newPoints := 0
+		shifted := 0
 		os.Stdin.Read(ans)
 		var err error
-		switch string(ans) {
+		switch strings.ToLower(string(ans)) {
 		case "l":
-			newPoints, err = board.ShiftRight()
+			newPoints, shifted = board.ShiftRight()
 		case "k":
-			newPoints, err = board.ShiftDown()
+			newPoints, shifted = board.ShiftDown()
 		case "j":
-			newPoints, err = board.ShiftLeft()
+			newPoints, shifted = board.ShiftLeft()
 		case "i":
-			newPoints, err = board.ShiftUp()
+			newPoints, shifted = board.ShiftUp()
+		case "n":
+			fmt.Printf("Are you sure?[n]: ")
+			os.Stdin.Read(ans)
+			if strings.ToLower(string(ans)) == "y" {
+				board.Reset()
+				player.Score = 0
+			}
 		case "q":
-			return
+			fmt.Printf("Are you sure?[n]: ")
+			os.Stdin.Read(ans)
+			if strings.ToLower(string(ans)) == "y" {
+				return
+			}
 		}
 
-		if err != nil {
+		if shifted == 0 {
 			continue
 		} else {
 			if err = board.NewCell(); err != nil {
