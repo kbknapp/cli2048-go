@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const Version = "0.4.2"
+const Version = "0.4.3"
 const GameSize = 4
 const Os = "Linux"
 
