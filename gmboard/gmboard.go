@@ -57,9 +57,10 @@ func (gb *GameBoard) NewCell() error {
 	return gb.movesLeft()
 }
 
-func (gb *GameBoard) shiftIndices(indices [][]int) error {
+func (gb *GameBoard) shiftIndices(indices [][]int) (int, error) {
 	done := false
 	moves := 0
+	p := 0
 	offLimits := make([]bool, len(gb.M))
 	for {
 		for i, seq := range indices {
@@ -94,6 +95,7 @@ func (gb *GameBoard) shiftIndices(indices [][]int) error {
 				} else if currNum == gb.M[newIndex] {
 					if !offLimits[cell] {
 						gb.M[newIndex] = currNum * 2
+						p += gb.M[newIndex]
 						offLimits[newIndex] = true
 						gb.M[cell] = 0
 						done = false
@@ -117,14 +119,15 @@ func (gb *GameBoard) shiftIndices(indices [][]int) error {
 		done = true
 	}
 	if moves > 0 {
-		return nil
+		return p, nil
 	}
-	return errors.New("No moves")
+	return 0, errors.New("No moves")
 }
 
-func (gb *GameBoard) shiftIndicesRev(indices [][]int) error {
+func (gb *GameBoard) shiftIndicesRev(indices [][]int) (int, error) {
 	done := false
 	moves := 0
+	p := 0
 	offLimits := make([]bool, len(gb.M))
 	for {
 		for i := gb.Size - 1; i >= 0; i-- {
@@ -159,6 +162,7 @@ func (gb *GameBoard) shiftIndicesRev(indices [][]int) error {
 				} else if currNum == gb.M[newIndex] {
 					if !offLimits[indices[i][j]] {
 						gb.M[newIndex] = currNum * 2
+						p += gb.M[newIndex]
 						offLimits[newIndex] = true
 						gb.M[indices[i][j]] = 0
 						done = false
@@ -182,23 +186,23 @@ func (gb *GameBoard) shiftIndicesRev(indices [][]int) error {
 		done = true
 	}
 	if moves > 0 {
-		return nil
+		return p, nil
 	}
-	return errors.New("No moves")
+	return 0, errors.New("No moves")
 }
 
-func (gb *GameBoard) ShiftUp() error {
+func (gb *GameBoard) ShiftUp() (int, error) {
 	return gb.shiftIndices(gb.Rows)
 }
-func (gb *GameBoard) ShiftDown() error {
+func (gb *GameBoard) ShiftDown() (int, error) {
 	return gb.shiftIndicesRev(gb.Rows)
 }
 
-func (gb *GameBoard) ShiftLeft() error {
+func (gb *GameBoard) ShiftLeft() (int, error) {
 	return gb.shiftIndices(gb.Cols)
 }
 
-func (gb *GameBoard) ShiftRight() error {
+func (gb *GameBoard) ShiftRight() (int, error) {
 	return gb.shiftIndicesRev(gb.Cols)
 }
 

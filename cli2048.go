@@ -3,6 +3,7 @@ package main
 import (
 	"./gmboard"
 	"./gmdisplay"
+	"./gmplayer"
 	"fmt"
 	"os"
 )
@@ -14,6 +15,7 @@ const Os = "Linux"
 func main() {
 	game := gmboard.NewGameBoard(GameSize)
 	display := gmdisplay.NewGameDisplay(Os, GameSize)
+	player := gmplayer.Player{}
 
 	var ans []byte = make([]byte, 1)
 
@@ -22,19 +24,19 @@ func main() {
 
 	for {
 
-		display.UpdateDisplay(game.M)
-
+		display.UpdateDisplay(game.M, player.Score)
+		newPoints := 0
 		os.Stdin.Read(ans)
 		var err error
 		switch string(ans) {
 		case "l":
-			err = game.ShiftRight()
+			newPoints, err = game.ShiftRight()
 		case "k":
-			err = game.ShiftDown()
+			newPoints, err = game.ShiftDown()
 		case "j":
-			err = game.ShiftLeft()
+			newPoints, err = game.ShiftLeft()
 		case "i":
-			err = game.ShiftUp()
+			newPoints, err = game.ShiftUp()
 		case "q":
 			return
 		}
@@ -43,10 +45,12 @@ func main() {
 			continue
 		} else {
 			if err = game.NewCell(); err != nil {
-				display.UpdateDisplay(game.M)
+				display.UpdateDisplay(game.M, player.Score)
 				fmt.Printf("\n\n%s!\n\n", err.Error())
 				return
 			}
 		}
+
+		player.Score += newPoints
 	}
 }
