@@ -73,7 +73,6 @@ func (gd *GameDisplay) printSep() {
 }
 
 func (gd *GameDisplay) getCellString(v int) string {
-	s := ""
 	switch gd.Os {
 	case "Linux":
 		return gd.formatCellNix(v)
@@ -86,6 +85,7 @@ func (gd *GameDisplay) getCellString(v int) string {
 }
 
 func (gd *GameDisplay) formatCellNix(v int) string {
+	s := ""
 	switch v {
 	case 2:
 		s = fmt.Sprintf("\x1b[0;31m  %d \x1b[0m", v)
@@ -116,6 +116,7 @@ func (gd *GameDisplay) formatCellNix(v int) string {
 }
 
 func (gd *GameDisplay) formatCellWin(v int) string {
+	s := ""
 	switch v {
 	case 2:
 		fallthrough
