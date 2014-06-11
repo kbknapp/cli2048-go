@@ -28,6 +28,7 @@ func NewGameDisplay(os string, size int) GameDisplay {
 func (gd *GameDisplay) CloseDisplay() {
 	switch gd.Os {
 	case "Linux":
+		gd.clearTerminal()
 		exec.Command("stty", "-F", "/dev/tty", "-cbreak").Run()
 		exec.Command("stty", "-F", "/dev/tty", "echo").Run()
 	case "Windows":

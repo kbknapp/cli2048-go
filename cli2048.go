@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const Version = "0.4.6"
+const Version = "0.4.7"
 const boardSize = 4
 const Os = "Linux"
 
@@ -59,7 +59,15 @@ func main() {
 			if err = board.NewCell(); err != nil {
 				display.UpdateDisplay(board.M, player.Score)
 				fmt.Printf("\n\n%s!\n\n", err.Error())
-				return
+				fmt.Printf("Play again?[y]: ")
+				os.Stdin.Read(ans)
+				if strings.ToLower(string(ans)) == "n" {
+					fmt.Println("")
+					return
+				} else {
+					board.Reset()
+					player.Score = 0
+				}
 			}
 		}
 
