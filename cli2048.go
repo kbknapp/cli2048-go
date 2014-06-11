@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const Version = "0.5"
+const Version = "0.5.1"
 const boardSize = 4
 const Os = "Linux"
 
@@ -23,7 +23,7 @@ func main() {
 
 	for {
 
-		display.UpdateDisplay(board.M, player.Score)
+		display.UpdateDisplay(board.M, player.Score, player.HighScore)
 		newPoints := 0
 		shifted := 0
 		os.Stdin.Read(ans)
@@ -84,7 +84,8 @@ func main() {
 			}
 		case "h":
 			fmt.Println("")
-			fmt.Print(`Controls:
+			fmt.Print(`
+Controls:
 
 UP	w, i, [UP ARROW]
 DOWN	s, k, [DOWN ARROW]
@@ -120,7 +121,7 @@ NEW GAME	n, r
 			continue
 		} else {
 			if err = board.NewCell(); err != nil {
-				display.UpdateDisplay(board.M, player.Score)
+				display.UpdateDisplay(board.M, player.Score, player.HighScore)
 				fmt.Printf("\n\n%s!\n\n", err.Error())
 				fmt.Printf("Play again?[y]: ")
 				os.Stdin.Read(ans)
@@ -133,7 +134,9 @@ NEW GAME	n, r
 				}
 			}
 		}
-
 		player.Score += newPoints
+		if player.Score >= player.HighScore {
+			player.HighScore = player.Score
+		}
 	}
 }

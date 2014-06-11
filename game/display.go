@@ -37,10 +37,11 @@ func (gd *GameDisplay) CloseDisplay() {
 
 }
 
-func (gd *GameDisplay) UpdateDisplay(seq []int, score int) {
+func (gd *GameDisplay) UpdateDisplay(seq []int, score, hscore int) {
 	gd.clearTerminal()
 
-	fmt.Printf("Score:\t%d\n", score)
+	fmt.Printf("Score:\t\t%d\n", score)
+	fmt.Printf("High Score:\t%d\n", hscore)
 	gd.printSep()
 
 	for i := 0; i < len(seq); i++ {
