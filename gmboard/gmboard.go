@@ -2,38 +2,31 @@ package gmboard
 
 import (
 	"errors"
-	"fmt"
 	"github.com/kbknapp/go/matrix"
 	"math/rand"
 	"time"
 )
-
-const GameSize = 4
 
 type GameBoard struct {
 	matrix.Matrix
 	M []int
 }
 
-func NewGameBoard() GameBoard {
+func NewGameBoard(size int) GameBoard {
 
-	gb := GameBoard{matrix.NewMatrix(GameSize), make([]int, GameSize*GameSize)}
+	gb := GameBoard{matrix.NewMatrix(size), make([]int, size*size)}
 	for i := 0; i < len(gb.M); i++ {
 		gb.M[i] = 0
 	}
-	fmt.Printf("%v\n", gb)
+
+	gb.NewCell()
+	gb.NewCell()
+
 	return gb
 }
 
 func (gb *GameBoard) NewCell() error {
-	full := true
-	for i := 0; i < len(gb.M); i++ {
-		if gb.M[i] == 0 {
-			full = false
-			break
-		}
-	}
-	if full {
+	if gb.isFull() {
 		return gb.movesLeft()
 	}
 	i := 0
@@ -61,7 +54,7 @@ func (gb *GameBoard) NewCell() error {
 
 	gb.M[i] = num
 
-	return nil
+	return gb.movesLeft()
 }
 
 func (gb *GameBoard) shiftIndices(indices [][]int) error {
@@ -243,5 +236,18 @@ func (gb *GameBoard) movesLeft() error {
 			b = gb.M[col[j+2]]
 		}
 	}
-	return errors.New("Game over")
+	if gb.isFull() {
+		return errors.New("Game over")
+	} else {
+		return nil
+	}
+}
+
+func (gb *GameBoard) isFull() bool {
+	for i := 0; i < len(gb.M); i++ {
+		if gb.M[i] == 0 {
+			return false
+		}
+	}
+	return true
 }
