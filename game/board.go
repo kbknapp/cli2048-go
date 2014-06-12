@@ -2,19 +2,19 @@ package game
 
 import (
 	"errors"
-	"github.com/kbknapp/go/matrix"
+	"github.com/kbknapp/gok/math"
 	"math/rand"
 	"time"
 )
 
 type GameBoard struct {
-	matrix.Matrix
+	math.Matrix
 	M []int
 }
 
 func NewGameBoard(size int) GameBoard {
 
-	gb := GameBoard{matrix.NewMatrix(size), make([]int, size*size)}
+	gb := GameBoard{math.NewMatrix(size), make([]int, size*size)}
 	for i := 0; i < len(gb.M); i++ {
 		gb.M[i] = 0
 	}
