@@ -13,7 +13,7 @@ type GameBoard struct {
 
 func NewGameBoard(size int) GameBoard {
 
-	gb := GameBoard{math.NewMatrix(size), make([]int, size*size)}
+	gb := GameBoard{math.NewMatrix(size)}
 	for i := 0; i < len(gb.M); i++ {
 		gb.M[i] = 0
 	}
