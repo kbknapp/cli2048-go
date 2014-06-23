@@ -13,10 +13,8 @@ const (
 	boardSize = 4
 	Os        = "Linux"
 	Usage     = `Usage: cli2048 [flags]
-	-v		Display version
-	--version
-	-h		Display help
-	--help
+	-v, --version		Display version information
+	-h, --help			Display help information
 
 Controls:
 	UP      w, i, [UP ARROW]
@@ -32,8 +30,8 @@ Controls:
 	QUIT    q, [ESC]`
 )
 
-var vp = flag.Bool("version", false, "Display the version")
-var hp = flag.Bool("help", false, "Display help info")
+var vp = flag.Bool("version", false, "Display version information")
+var hp = flag.Bool("help", false, "Display help information")
 
 func init() {
 	flag.BoolVar(vp, "v", false, "Display the version")

@@ -9,7 +9,6 @@ import (
 
 type GameBoard struct {
 	math.Matrix
-	M []int
 }
 
 func NewGameBoard(size int) GameBoard {
